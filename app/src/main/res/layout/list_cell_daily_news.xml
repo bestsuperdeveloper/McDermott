@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="5dp"
+    tools:context="zdalyapp.mayah.login.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/list_cell_left_margin"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:text="ADNOC signs 15-year gas salies agreement with Dubai" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="30dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="@dimen/list_cell_right_margin"
+            android:layout_gravity="bottom"
+            android:background="@null"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/share" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="fill_parent"
+        android:paddingLeft="@dimen/list_cell_left_margin"
+        android:layout_marginRight="@dimen/list_cell_right_margin"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:maxLines="5"
+        android:textSize="13sp"
+        android:text="ADNOC signs 15-year gas salies agreement with Dubai" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/list_cell_small_left_margin"
+                android:layout_marginTop="10dp"
+                android:lines="1"
+                android:text="ADNOC"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/list_cell_small_left_margin"
+                android:layout_marginTop="8dp"
+                android:lines="1"
+                android:text="ADNOC"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:button="@drawable/custom_chk_btn"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@android:color/darker_gray"
+        android:layout_marginLeft="@dimen/list_cell_left_margin"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="3dp"
+        android:layout_height="1dp"/>
+</LinearLayout>

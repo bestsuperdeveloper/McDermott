@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="5dp"
+    android:paddingLeft="@dimen/list_cell_left_margin"
+    tools:context="zdalyapp.mayah.login.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:id="@+id/colorLayout1"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="11dp">
+
+            <View
+                android:id="@+id/colorView1"
+                android:layout_width="24dp"
+                android:layout_height="11dp"
+
+                android:background="@color/colorButton1"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="24dp"
+                android:layout_height="11dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/total_sub" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:textSize="11dp"
+            android:text="text"
+            android:id="@+id/textView1"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:id="@+id/colorLayout2"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="11dp">
+            <View
+                android:layout_width="24dp"
+                android:id="@+id/colorView2"
+                android:background="@color/colorAccent"
+                android:layout_gravity="center_vertical"
+                android:layout_height="11dp"/>
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="24dp"
+                android:layout_height="11dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/total_sub" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:textSize="11dp"
+            android:text="text"
+            android:id="@+id/textView2"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

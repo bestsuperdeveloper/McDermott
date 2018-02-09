@@ -1,0 +1,66 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="zdalyapp.mayah.global.WebViewFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+
+        android:layout_height="match_parent">
+        <WebView
+            android:layout_width="match_parent"
+            android:id="@+id/webView"
+            android:layout_weight="1"
+            android:layout_height="0dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@color/colorGray1"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/imageButton1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="@dimen/list_cell_left_margin"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/left" />
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                android:background="@null"
+                android:src="@drawable/home" />
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="@dimen/list_cell_left_margin"
+                android:scaleType="fitXY"
+                android:background="@null"
+                android:src="@drawable/share_white" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>
