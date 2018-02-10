@@ -86,34 +86,41 @@ public class DummyContent {
                 int mintemp = Integer.parseInt(weatherObj.getString("mintempC").replaceAll("[^0-9\\\\.]+",""));
                 JSONArray hourlyArr = weatherObj.getJSONArray("hourly");
                 JSONObject hourlyObj = hourlyArr.getJSONObject(0);
+                Log.d("hourlyObj", hourlyObj.toString());
                 int temp = Integer.parseInt(hourlyObj.getString("tempC").replaceAll("[^0-9\\\\.]+",""));
                 int windspeedKmph = Integer.parseInt(hourlyObj.getString("windspeedKmph").replaceAll("[^0-9\\\\.]+",""));
+                Log.d("oceandetail", windspeedKmph + " windspeedKmph");
                 int humidity = Integer.parseInt(hourlyObj.getString("humidity").replaceAll("[^0-9\\\\.]+",""));
+                Log.d("oceandetail", humidity + " humidity");
                 int visibility = Integer.parseInt(hourlyObj.getString("visibility").replaceAll("[^0-9\\\\.]+",""));
+                Log.d("oceandetail", visibility + " visibility");
                 mTempHighLow = (String.format("Low: %d°C     High: %d°C", mintemp, maxtemp));
                 Log.d("oceandetail", mTempHighLow);
                 mTemp = (String.format("%d°C     %s°F", temp, hourlyObj.getString("tempF")));
                 Log.d("oceandetail", mTemp);
-                mWindSpeedKm.valueOf(String.format("Wind Speed: %dkm/h", windspeedKmph));
-                Log.d("oceandetail", mWindSpeedKm);
-                mWindDirection.valueOf(hourlyObj.getString("winddir16Point"));
-                Log.d("oceandetail", mWindDirection);
-                mWindSpeedMile.valueOf(String.format("Wind Speed: %smiles/hour", hourlyObj.getString("windspeedMiles")));
-                mPrecip.valueOf(String.format("Precipitation: %smm", hourlyObj.getString("precipMM")));
-                mHumidity.valueOf(String.format("Humidity: %d%s", humidity, "%"));
-                mVisibility.valueOf(String.format("Visibility: %dkm", visibility));
-                mPressure.valueOf(String.format("Pressure: %smb", hourlyObj.getString("pressure")));
+                mWindSpeedKm = (String.format("Wind Speed: %dkm/h", windspeedKmph));
+                Log.d("oceandetail", "mWindSpeedKm " + mWindSpeedKm);
+                mWindDirection = (hourlyObj.getString("winddir16Point"));
+                Log.d("oceandetail", "mWindDirection " +mWindDirection);
+                mWindSpeedMile = (String.format("Wind Speed: %smiles/hour", hourlyObj.getString("windspeedMiles")));
+                Log.d("oceandetail", "mWindSpeedMile " +mWindSpeedMile);
+                mPrecip = (String.format("Precipitation: %smm", hourlyObj.getString("precipMM")));
+                Log.d("oceandetail", "mPrecip " + mPrecip);
+                mHumidity = (String.format("Humidity: %d%s", humidity, "%"));
+                mVisibility = (String.format("Visibility: %dkm", visibility));
+                mPressure = (String.format("Pressure: %smb", hourlyObj.getString("pressure")));
                 JSONArray iconArr = hourlyObj.getJSONArray("weatherIconUrl");
                 JSONObject iconObj = iconArr.getJSONObject(0);
                 iconURL = iconObj.getString("value");
                 JSONArray weatherDescArr = hourlyObj.getJSONArray("weatherDesc");
                 JSONObject weatherDescObj = weatherDescArr.getJSONObject(0);
+                Log.d("weatherDescObj", weatherDescObj.toString());
                 String weatherDesc = weatherDescObj.getString("value");
-                mDesc.valueOf(weatherDesc);
-                mDate.valueOf(weatherDescObj.getString("date"));
+                mDesc = (weatherDesc);
+                mDate = (weatherObj.getString("date"));
             } catch (JSONException e) {
 
-
+                e.printStackTrace();
             }
 
         }
