@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="5dp"
+    android:background="?attr/selectableItemBackground"
     tools:context="zdalyapp.mayah.login.LoginActivity">
 
     <LinearLayout

@@ -37,11 +37,13 @@ import zdalyapp.mayah.global.Constants;
 import zdalyapp.mayah.global.Utils;
 import zdalyapp.mayah.keytrends.KeyTrendsFragment;
 import zdalyapp.mayah.keytrends.production.ProductionFragment;
+import zdalyapp.mayah.weatherpodcast.city.CityFragment;
+import zdalyapp.mayah.weatherpodcast.ocean.OceanFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link WeatherForecastFragment.OnFragmentInteractionListener} interface
+ * {@link WeatherForecastFragment.OnWeahterFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link WeatherForecastFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -56,7 +58,7 @@ public class WeatherForecastFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnWeahterFragmentInteractionListener mListener;
     private Dialog loginDialog;
     JSONArray weatherArr, marineArr;
 
@@ -105,7 +107,7 @@ public class WeatherForecastFragment extends Fragment {
         // Inflate the layout for this fragment
 
         mainView = inflater.inflate(R.layout.fragment_weather_forecast, container, false);
-        ShowView();
+        GetData();
         return mainView;
     }
 
@@ -120,7 +122,7 @@ public class WeatherForecastFragment extends Fragment {
             loginDialog.setContentView(R.layout.activity_login_view);
             ImageView imageView = loginDialog.findViewById(R.id.imageView);
             TextView textView = loginDialog.findViewById(R.id.textView);
-            textView.setText("Getting trends...");
+            textView.setText("Getting weather forecast...");
         }
         loginDialog.show();
     }
@@ -137,6 +139,7 @@ public class WeatherForecastFragment extends Fragment {
                         // display response
                         Log.d("Response", response.toString());
                         hideDialog();
+                        ShowView();
                         ParseDataFromJsonArray(response);
 
                     }
@@ -171,23 +174,25 @@ public class WeatherForecastFragment extends Fragment {
 
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction fr = fm.beginTransaction();
-
+        adapter.addFragment(CityFragment.newInstance(1, weatherArr.toString()), "city");
+        adapter.addFragment(OceanFragment.newInstance(marineArr.toString(), ""), "ocean");
         viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.setupWithViewPager(viewPager, true);
 
     }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onWeatherFragmentInteraction(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnWeahterFragmentInteractionListener) {
+            mListener = (OnWeahterFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -210,9 +215,9 @@ public class WeatherForecastFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnWeahterFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onWeatherFragmentInteraction(Uri uri);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

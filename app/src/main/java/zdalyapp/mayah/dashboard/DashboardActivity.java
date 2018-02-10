@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -29,10 +30,14 @@ import zdalyapp.mayah.keytrends.industry.IndustryFragment;
 import zdalyapp.mayah.keytrends.KeyTrendsFragment;
 import zdalyapp.mayah.keytrends.production.ProductionFragment;
 import zdalyapp.mayah.spotprices.SpotPriceFragment;
+import zdalyapp.mayah.weatherpodcast.WeatherForecastFragment;
+import zdalyapp.mayah.weatherpodcast.city.CityFragment;
+import zdalyapp.mayah.weatherpodcast.ocean.OceanFragment;
 
 public class DashboardActivity extends AppCompatActivity implements DailyNewsFragment.OnListDailyNewsInteractionListener, WebViewFragment.OnWebFragmentInteractionListener
     , KeyTrendsFragment.OnTrendsInteractionListener,   IndustryFragment.OnIndustryListFragmentInteractionListener, ProductionFragment.OnProductionListFragmentInteractionListener
-    , SpotPriceFragment.OnSpotListFragmentInteractionListener
+    , SpotPriceFragment.OnSpotListFragmentInteractionListener, WeatherForecastFragment.OnWeahterFragmentInteractionListener
+    , OceanFragment.OnOceanFragmentInteractionListener, CityFragment.OnCityListFragmentInteractionListener
 {
 
     Button button1, button2, button3, button4;
@@ -144,6 +149,17 @@ public class DashboardActivity extends AppCompatActivity implements DailyNewsFra
 
                 break;
             }
+            case 3:
+            {
+                fr = (WeatherForecastFragment) fm.findFragmentByTag("weather");
+                if (fr == null)
+                {
+                    fr = WeatherForecastFragment.newInstance("", "");
+                    transaction.replace(R.id.mainFrame, fr, "weather").commit();
+                }
+
+                break;
+            }
         }
 
     }
@@ -151,10 +167,11 @@ public class DashboardActivity extends AppCompatActivity implements DailyNewsFra
     @Override
     public void onListFragmentInteraction(DummyContent.DailyNewsItem item) {
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(R.id.mainFrame, WebViewFragment.newInstance(item.url, "")).addToBackStack(null);
-        transaction.commit();
+
+//        FragmentManager fm = getSupportFragmentManager();
+//        FragmentTransaction transaction = fm.beginTransaction();
+//        transaction.add(R.id.mainFrame, WebViewFragment.newInstance(item.url, "")).addToBackStack(null);
+//        transaction.commit();
     }
 
     @Override
@@ -184,6 +201,23 @@ public class DashboardActivity extends AppCompatActivity implements DailyNewsFra
     private String stringField;
     private int intField;
     private List<Object> arrayField;
+
+    @Override
+    public void onWeatherFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onOceanFragmentInteraction(zdalyapp.mayah.weatherpodcast.ocean.dummy.DummyContent.OceanItem uri) {
+
+    }
+
+    @Override
+    public void onCityListFragmentInteraction(zdalyapp.mayah.weatherpodcast.city.dummy.DummyContent.CityItem item) {
+
+        Toast.makeText(this, item.title, Toast.LENGTH_LONG).show();
+    }
+
     private enum DataHolder {
         INSTANCE;
 

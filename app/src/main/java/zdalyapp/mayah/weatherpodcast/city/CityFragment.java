@@ -18,6 +18,7 @@ import zdalyapp.mayah.R;
 import zdalyapp.mayah.weatherpodcast.city.dummy.DummyContent;
 import zdalyapp.mayah.weatherpodcast.city.dummy.DummyContent.CityItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,21 +49,28 @@ public class CityFragment extends Fragment {
         CityFragment fragment = new CityFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putString(ARG_COLUMN_COUNT, data);
+        args.putString(ARG_JSON_DATA, data);
         fragment.setArguments(args);
         return fragment;
     }
 
     JSONArray dataArray;
     String mTitle;
+    ArrayList<CityItem> dataList;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        dataList = new ArrayList<>();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             try {
                 dataArray = new JSONArray(getArguments().getString(ARG_JSON_DATA));
+                int lenth = dataArray.length();
+                for (int i = 0; i < lenth; i++)
+                {
+                    dataList.add(new CityItem(dataArray.getJSONObject(i)));
+                }
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -70,7 +78,7 @@ public class CityFragment extends Fragment {
         }
     }
 
-
+    RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,12 +88,13 @@ public class CityFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            recyclerView.setAdapter(new MyCityRecyclerViewAdapter(dataList, mListener));
            // recyclerView.setAdapter(new MyCityRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
         return view;

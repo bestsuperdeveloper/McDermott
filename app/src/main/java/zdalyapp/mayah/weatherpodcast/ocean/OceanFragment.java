@@ -1,27 +1,41 @@
 package zdalyapp.mayah.weatherpodcast.ocean;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import zdalyapp.mayah.weatherpodcast.city.DetailWeatherActivity;
 import zdalyapp.mayah.R;
+import zdalyapp.mayah.weatherpodcast.ocean.dummy.DummyContent;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OceanFragment.OnFragmentInteractionListener} interface
+ * {@link OceanFragment.OnOceanFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link OceanFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -36,7 +50,7 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnOceanFragmentInteractionListener mListener;
     private JSONArray dataArray;
 
     public OceanFragment() {
@@ -61,6 +75,7 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
         return fragment;
     }
 
+    boolean bMatchState;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,36 +87,72 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
                 dataArray = new JSONArray(mParam1);
             } catch (JSONException e) {
 
-
             }
         }
     }
 
     View mainView;
     MapView mapView;
+    ImageButton imageButton;
+    RecyclerView recyclerView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainView = inflater.inflate(R.layout.fragment_ocean, container, false);
         mapView = (MapView) mainView.findViewById(R.id.mapView);
+        recyclerView = (RecyclerView) mainView.findViewById(R.id.listView);
+        imageButton = (ImageButton) mainView.findViewById(R.id.imageButton7);
+        mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mainView.getContext()));
 
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bMatchState = !bMatchState;
+                if (bMatchState == true)
+                {
+                    mapView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    mapView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+
+            }
+        });
+        bMatchState = false;
         return mainView;
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onResume() {
+        mapView.onResume();
+        super.onResume();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+    // TODO: Rename method, update argument and hook method into UI event
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnOceanFragmentInteractionListener) {
+            mListener = (OnOceanFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -114,14 +165,39 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
         mListener = null;
     }
     GoogleMap mMap;
+    ArrayList<DummyContent.OceanItem> dataList;
     private void ShowMap() {
 
-        dataArray = new JSONArray();
         try {
             JSONObject dataObj = dataArray.getJSONObject(0);
-            double lat = dataObj.getDouble("lat");
-            double lon = dataObj.getDouble("lon");
-            
+            double lat = Double.parseDouble(dataObj.getString("lat").replaceAll("[^0-9\\\\.]+",""));
+            double lon = Double.parseDouble(dataObj.getString("lon").replaceAll("[^0-9\\\\.]+",""));
+            LatLng pos = new LatLng(lat, lon);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    String subId = marker.getTag().toString();
+                    int id  = Integer.valueOf(subId);
+                    try {
+                        JSONObject jsonObject = dataArray.getJSONObject(id);
+                        Intent intent = new Intent(getActivity(), DetailWeatherActivity.class);
+                        intent.putExtra("data", jsonObject.toString());
+                        startActivity(intent);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("subid", subId);
+                    return false;
+                }
+            });
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    String subId = marker.getTag().toString();
+                }
+            });
             AddAnnotation();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -130,24 +206,33 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
 
     private void AddAnnotation() {
         int length = dataArray.length();
+        dataList = new ArrayList<>();
         for (int i = 0; i < length; i++)
         {
             try {
+
                 JSONObject dataObj = dataArray.getJSONObject(i);
-                double lat = dataObj.getDouble("lat");
-                double lon = dataObj.getDouble("lon");
+                double lat = Double.parseDouble(dataObj.getString("lat").replaceAll("[^0-9\\\\.]+",""));
+                double lon = Double.parseDouble(dataObj.getString("lon").replaceAll("[^0-9\\\\.]+",""));
                 String title = dataObj.getString("name");
+                LatLng pos = new LatLng(lat, lon);
+                Marker marker  = mMap.addMarker(new MarkerOptions().position(pos).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.red_pin_small)));
+                dataList.add(new DummyContent.OceanItem(dataObj));
+                Log.d("position", lat + " " + lon);
                 String subTitle = String.format("%d", i);
+                marker.setTag(subTitle);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        recyclerView.setAdapter(new MyOceanRecyclerViewAdapter(dataList, mListener));
 
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         ShowMap();
     }
 
@@ -161,8 +246,8 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnOceanFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onOceanFragmentInteraction(DummyContent.OceanItem oceanItem);
     }
 }

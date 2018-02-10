@@ -11,7 +11,8 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="scrollable"
+        app:tabMode="fixed"
+        app:tabMaxWidth="0dp"
         app:tabSelectedTextColor="@color/colorButton2"
         app:tabGravity="fill" >
 
