@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import zdalyapp.mayah.R;
+import zdalyapp.mayah.global.Utils;
 import zdalyapp.mayah.weatherpodcast.ocean.dummy.DummyContent;
 
 
@@ -50,6 +51,16 @@ public class MyOceanRecyclerViewAdapter extends RecyclerView.Adapter<MyOceanRecy
                 @Override
                 public void onClick(View v) {
                     if (null != mListener) {
+                        JSONObject marineObj = null;
+                        try {
+                            marineObj = holder.mItem.getJSONObject("weather");
+                            JSONObject dataObj = marineObj.getJSONObject("data");
+                            JSONArray weatherArr = dataObj.getJSONArray("weather");
+                            Utils.SetStringFromPreference("weather_detail", weatherArr.toString(), holder.mView.getContext());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
                         mListener.onOceanFragmentInteraction(detailItem);

@@ -3,6 +3,8 @@ package zdalyapp.mayah.weatherpodcast.ocean;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import zdalyapp.mayah.R;
+import zdalyapp.mayah.global.Utils;
 import zdalyapp.mayah.weatherpodcast.ocean.dummy.DummyContent;
 
 public class OceanDetailActivity extends AppCompatActivity {
@@ -22,6 +25,7 @@ public class OceanDetailActivity extends AppCompatActivity {
     JSONArray weatherArr;
     TextView mTitleView, mLocation, mDate, mDesc, mTemp, mTempHighLow, mWindSpeedKm, mWindSpeedMile, mWindDirection, mPrecip, mHumidity, mVisibility, mPressure;
     ImageView iconImage;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +53,21 @@ public class OceanDetailActivity extends AppCompatActivity {
             mDesc.setText(detailItem.mDesc);
             mDate.setText(detailItem.mDate);
             Picasso.with(this).load(detailItem.iconURL).error(R.drawable.check_small).into(iconImage);
+            String jsonStr = Utils.GetStringFromPreference("weather_detail", this);
+        try {
+            JSONArray jsonArray = new JSONArray(jsonStr);
+            JSONArray tempJson = new JSONArray();
+            for (int i = 1; i < jsonArray.length(); i++)
+            {
+                tempJson.put(jsonArray.get(i));
+            }
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(new MyOceanDetailRecyclerViewAdapter(tempJson, this));
+
+        } catch (JSONException e) {
+
+                e.printStackTrace();
+        }
     }
 
     private void initView() {
@@ -66,6 +85,7 @@ public class OceanDetailActivity extends AppCompatActivity {
         mVisibility = (TextView) findViewById(R.id.textView24);
         mPressure = (TextView) findViewById(R.id.textView25);
         iconImage = (ImageView) findViewById(R.id.imageView8);
+        recyclerView = (RecyclerView ) findViewById(R.id.listView);
         findViewById(R.id.imageButton6).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
