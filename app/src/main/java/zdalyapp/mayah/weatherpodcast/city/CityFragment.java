@@ -67,12 +67,6 @@ public class CityFragment extends Fragment {
             try {
                 String dataStr = Utils.GetStringFromPreference("city", getActivity());
                 dataArray = new JSONArray(dataStr);
-                int lenth = dataArray.length();
-                for (int i = 0; i < lenth; i++)
-                {
-                    dataList.add(new CityItem(dataArray.getJSONObject(i)));
-                }
-
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -96,7 +90,7 @@ public class CityFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyCityRecyclerViewAdapter(dataList, mListener));
+            recyclerView.setAdapter(new MyCityRecyclerViewAdapter(dataArray, mListener));
            // recyclerView.setAdapter(new MyCityRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
         return view;

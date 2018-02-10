@@ -429,7 +429,8 @@ public class DashboardActivity extends AppCompatActivity implements DailyNewsFra
     @Override
     public void onCityListFragmentInteraction(zdalyapp.mayah.weatherpodcast.city.dummy.DummyContent.CityItem item) {
 
-        Toast.makeText(this, item.title, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, DetailWeatherActivity.class);
+        startActivity(intent);
     }
 
     private enum DataHolder {

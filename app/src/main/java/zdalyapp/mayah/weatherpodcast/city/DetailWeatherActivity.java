@@ -2,6 +2,7 @@ package zdalyapp.mayah.weatherpodcast.city;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,35 +43,47 @@ public class DetailWeatherActivity extends AppCompatActivity {
             JSONObject dataObj = jsonData.getJSONObject("data");
             JSONArray conditionArr = dataObj.getJSONArray("current_condition");
             JSONArray requestArr = dataObj.getJSONArray("request");
-            JSONObject jsonObject = conditionArr.getJSONObject(0);
+            JSONObject conditionObj = conditionArr.getJSONObject(0);
             JSONObject requestObj = requestArr.getJSONObject(0);
             if (requestObj.has("query"))
                 mTitleView.setText(requestObj.getString("query"));
-            if (jsonObject.has("temp_C"))
-                mTempView.setText(jsonObject.getString("temp_C"));
-            if (jsonObject.has("windspeedKmph"))
-                mWindSpeed.setText("Wind Speed: "+ jsonObject.getString("windspeedKmph") + "Km/h");
-            if (jsonObject.has("windspeedKmph"))
-                mHumidity.setText("Humidity: " + jsonObject.getString("humidity") + "%");
-            if (jsonObject.has("pressure"))
-                mHumidity.setText("Pressure: " + jsonObject.getString("pressure") + "mb");
-            if (jsonObject.has("weatherIconUrl")) {
-                JSONArray jsonArray = jsonObject.getJSONArray("weatherIconUrl");
+            if (conditionObj.has("temp_C"))
+                mTempView.setText(conditionObj.getString("temp_C") + "°C");
+            if (conditionObj.has("windspeedKmph"))
+                mWindSpeed.setText("Wind Speed: "+ conditionObj.getString("windspeedKmph") + "Km/h");
+            if (conditionObj.has("humidity"))
+                mHumidity.setText("Humidity: " + conditionObj.getString("humidity") + "%");
+            if (conditionObj.has("pressure"))
+                mPressure.setText("Pressure: " + conditionObj.getString("pressure") + "mb");
+            if (conditionObj.has("visibility"))
+                mVisibility.setText("Visibility: " + conditionObj.getString("visibility") + "km");
+
+            if (conditionObj.has("weatherIconUrl")) {
+                JSONArray jsonArray = conditionObj.getJSONArray("weatherIconUrl");
                 JSONObject jsonObject1 = jsonArray.getJSONObject(0);
                 if (jsonObject1.has("value")) {
                     Picasso.with(this).load(jsonObject1.getString("value")).error(R.drawable.check_small).into(imageView);
                 }
             }
-            if (jsonObject.has("weatherDesc")) {
-                JSONArray jsonArray = jsonObject.getJSONArray("weatherDesc");
+            JSONArray weatherArr = dataObj.getJSONArray("weather");
+            if (conditionObj.has("weatherDesc")) {
+                JSONArray jsonArray = conditionObj.getJSONArray("weatherDesc");
                 JSONObject jsonObject1 = jsonArray.getJSONObject(0);
                 if (jsonObject1.has("value"))
                     mDesc.setText(jsonObject1.getString("value"));
             }
+            JSONObject weatherObj = weatherArr.getJSONObject(0);
+            mDateView.setText(weatherObj.getString("date"));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-
+        findViewById(R.id.imageButton6).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }

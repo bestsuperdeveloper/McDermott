@@ -38,7 +38,7 @@ public class MyCityDetailRecyclerViewAdapter extends RecyclerView.Adapter<MyCity
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_city, parent, false);
+                .inflate(R.layout.fragment_city_detail, parent, false);
         return new ViewHolder(view);
     }
 
@@ -62,7 +62,7 @@ public class MyCityDetailRecyclerViewAdapter extends RecyclerView.Adapter<MyCity
                     if (null != mListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        Utils.SetStringFromPreference("city_detail", object.toString(), holder.mView.getContext());
+
                         mListener.onCityListFragmentInteraction(holder.mItem);
                     }
                 }

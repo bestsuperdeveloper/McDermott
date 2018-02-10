@@ -9,7 +9,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import zdalyapp.mayah.R;
+import zdalyapp.mayah.global.Utils;
 import zdalyapp.mayah.weatherpodcast.city.CityFragment.OnCityListFragmentInteractionListener;
 import zdalyapp.mayah.weatherpodcast.city.dummy.DummyContent.CityItem;
 
@@ -22,10 +27,10 @@ import java.util.List;
  */
 public class MyCityRecyclerViewAdapter extends RecyclerView.Adapter<MyCityRecyclerViewAdapter.ViewHolder> {
 
-    private final List<CityItem> mValues;
+    private final JSONArray mValues;
     private final OnCityListFragmentInteractionListener mListener;
 
-    public MyCityRecyclerViewAdapter(List<CityItem> items, OnCityListFragmentInteractionListener listener) {
+    public MyCityRecyclerViewAdapter(JSONArray items, OnCityListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -39,33 +44,40 @@ public class MyCityRecyclerViewAdapter extends RecyclerView.Adapter<MyCityRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        try {
+            final JSONObject jsonObject = mValues.getJSONObject(position);
+            holder.mItem = new CityItem(jsonObject);
 //        holder.mIdView.setText(mValues.get(position).id);
 //        holder.mContentView.setText(mValues.get(position).content);
 
-        Picasso.with(holder.mView.getContext()).load(holder.mItem.imgURL).error(R.drawable.check_small).into(holder.mIcon);
-      //  Glide.with(holder.mView.getContext()).load(holder.mItem.imgURL).into(holder.mIcon);
-        holder.mTitle.setText(holder.mItem.title);
-        holder.mTempC.setText(String.format("Tempc:   %s°C", holder.mItem.tempc));
-        holder.mTempF.setText(String.format("Tempf:   %s°F", holder.mItem.tempf));
-        holder.mWindSpeed.setText(String.format("Wind Speed:   %sKm/h", holder.mItem.windspeed));
-        holder.mHumidity.setText(String.format("Humidity:   %s", holder.mItem.humidity) + "%");
-        holder.mDesc.setText(String.format("%s", holder.mItem.desc));
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onCityListFragmentInteraction(holder.mItem);
+            Picasso.with(holder.mView.getContext()).load(holder.mItem.imgURL).error(R.drawable.check_small).into(holder.mIcon);
+            //  Glide.with(holder.mView.getContext()).load(holder.mItem.imgURL).into(holder.mIcon);
+            holder.mTitle.setText(holder.mItem.title);
+            holder.mTempC.setText(String.format("Tempc:   %s°C", holder.mItem.tempc));
+            holder.mTempF.setText(String.format("Tempf:   %s°F", holder.mItem.tempf));
+            holder.mWindSpeed.setText(String.format("Wind Speed:   %sKm/h", holder.mItem.windspeed));
+            holder.mHumidity.setText(String.format("Humidity:   %s", holder.mItem.humidity) + "%");
+            holder.mDesc.setText(String.format("%s", holder.mItem.desc));
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        Utils.SetStringFromPreference("city_detail", jsonObject.toString(), holder.mView.getContext());
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onCityListFragmentInteraction(holder.mItem);
+                    }
                 }
-            }
-        });
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues.length();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
