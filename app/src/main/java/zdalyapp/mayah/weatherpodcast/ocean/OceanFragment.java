@@ -8,6 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import zdalyapp.mayah.R;
 
 /**
@@ -18,7 +26,7 @@ import zdalyapp.mayah.R;
  * Use the {@link OceanFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OceanFragment extends Fragment {
+public class OceanFragment extends Fragment implements OnMapReadyCallback{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,6 +37,7 @@ public class OceanFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private JSONArray dataArray;
 
     public OceanFragment() {
         // Required empty public constructor
@@ -58,14 +67,27 @@ public class OceanFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            dataArray = new JSONArray();
+            try {
+                dataArray = new JSONArray(mParam1);
+            } catch (JSONException e) {
+
+
+            }
         }
     }
 
+    View mainView;
+    MapView mapView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ocean, container, false);
+        mainView = inflater.inflate(R.layout.fragment_ocean, container, false);
+        mapView = (MapView) mainView.findViewById(R.id.mapView);
+        mapView.getMapAsync(this);
+
+        return mainView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,6 +112,43 @@ public class OceanFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+    GoogleMap mMap;
+    private void ShowMap() {
+
+        dataArray = new JSONArray();
+        try {
+            JSONObject dataObj = dataArray.getJSONObject(0);
+            double lat = dataObj.getDouble("lat");
+            double lon = dataObj.getDouble("lon");
+            
+            AddAnnotation();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void AddAnnotation() {
+        int length = dataArray.length();
+        for (int i = 0; i < length; i++)
+        {
+            try {
+                JSONObject dataObj = dataArray.getJSONObject(i);
+                double lat = dataObj.getDouble("lat");
+                double lon = dataObj.getDouble("lon");
+                String title = dataObj.getString("name");
+                String subTitle = String.format("%d", i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        ShowMap();
     }
 
     /**

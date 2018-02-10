@@ -21,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +58,7 @@ public class WeatherForecastFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private Dialog loginDialog;
+    JSONArray weatherArr, marineArr;
 
     public WeatherForecastFragment() {
         // Required empty public constructor
@@ -124,83 +126,52 @@ public class WeatherForecastFragment extends Fragment {
     }
     private void GetData() {
         String id = Utils.GetStringFromPreference(Constants.USERID, getActivity());
-        String url = Constants.API_URL + Constants.KEY_TRENDS_URL + "?id=" + id;
+        String url = Constants.API_URL + Constants.WEATHER_FORECAST_URL + "?id=" + id;
         showDialog();
         Log.d("URL", url);
-        JsonArrayRequest newsRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>()
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
                 {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
                         // display response
                         Log.d("Response", response.toString());
-
-                        ParseDataFromJsonArray(response);
                         hideDialog();
+                        ParseDataFromJsonArray(response);
+
                     }
                 },
                 new Response.ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d("Error.Response", error.getLocalizedMessage());
                         hideDialog();
+
                     }
                 }
         );
-        McDomatsApp.getInstance().addToRequestQueue(newsRequest, "trensRequest");
+// Add the request to the RequestQueue.
+        McDomatsApp.getInstance().addToRequestQueue(loginRequest, "spotRequest");
+
     }
 
-    private void ParseDataFromJsonArray(JSONArray response) {
-        int length = response.length();
-        HashMap<String, Integer> map = new HashMap<>();
-        HashMap<String, JSONArray> dataByType = new HashMap<>();
-        JSONArray list;
-        ArrayList<String> headerTitleList = new ArrayList<>();
+    private void ParseDataFromJsonArray(JSONObject response) {
 
-        int maxColorCount = 1;
-        for (int i = 0; i < length; i++)
-        {
-            try {
-                JSONObject jsonObject = response.getJSONObject(i);
-                String type = jsonObject.getString("type");
-                JSONArray configArray = jsonObject.getJSONArray("configuration");
+        marineArr = new JSONArray();
+        weatherArr = new JSONArray();
+        try {
+            marineArr = response.getJSONArray("marine");
+            weatherArr = response.getJSONArray("weather");
 
-                if (maxColorCount < configArray.length())
-                    maxColorCount = configArray.length();
-
-                if (type != null && !type.equals("") && !map.containsKey(type))
-                {
-                    map.put(type, 1);
-                    headerTitleList.add(type);
-                    Log.d("type", type);
-                    dataByType.put(type, new JSONArray());
-                }
-
-                if (!dataByType.containsKey(type))
-                {
-                    list = new JSONArray(); list.put(jsonObject);
-                    dataByType.put(type, list);
-                }
-                else
-                {
-                    dataByType.get(type).put(jsonObject);
-                }
-
-            } catch (JSONException e) {
-
-            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        if (maxColorCount > Constants.GraphColorList.size())
-            Utils.makeGraphColor(maxColorCount - Constants.GraphColorList.size());
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        int size = headerTitleList.size();
+
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction fr = fm.beginTransaction();
-        for (int i = 0; i < size; i++)
-        {
-            String type = headerTitleList.get(i);
-            adapter.addFragment(ProductionFragment.newInstance(1, dataByType.get(type).toString()), type);
-        }
+
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
