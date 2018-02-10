@@ -2,6 +2,8 @@ package zdalyapp.mayah.weatherpodcast.city;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ public class DetailWeatherActivity extends AppCompatActivity {
     TextView mTitleView, mDateView, mTempView, mWindSpeed, mPressure, mHumidity, mVisibility, mDesc;
     ImageView imageView;
     JSONObject jsonData;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,8 @@ public class DetailWeatherActivity extends AppCompatActivity {
         mHumidity = (TextView) findViewById(R.id.textView21);
         mVisibility = (TextView) findViewById(R.id.textView22);
         imageView = (ImageView) findViewById(R.id.imageView8);
+        recyclerView = (RecyclerView) findViewById(R.id.listView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         String strJson = Utils.GetStringFromPreference("city_detail", this);
         try {
             jsonData = new JSONObject(strJson);
@@ -74,6 +79,7 @@ public class DetailWeatherActivity extends AppCompatActivity {
             }
             JSONObject weatherObj = weatherArr.getJSONObject(0);
             mDateView.setText(weatherObj.getString("date"));
+            recyclerView.setAdapter(new MyCityDetailRecyclerViewAdapter(weatherArr, this));
 
         } catch (JSONException e) {
             e.printStackTrace();

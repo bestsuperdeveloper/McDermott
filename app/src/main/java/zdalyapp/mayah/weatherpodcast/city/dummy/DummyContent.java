@@ -47,8 +47,6 @@ public class DummyContent {
         {
 
             try {
-
-
                 JSONObject dataObj = jsonData.getJSONObject("data");
                 JSONArray conditionArr = dataObj.getJSONArray("current_condition");
                 JSONArray requestArr = dataObj.getJSONArray("request");
@@ -86,6 +84,21 @@ public class DummyContent {
         @Override
         public String toString() {
             return tempc;
+        }
+    }
+    public static class CityDetailItem {
+        public String date = "";
+        public String desc = "";
+        public String tempHighLow = "";
+        public  String imgURL = "";
+
+        public CityDetailItem(JSONObject jsonData)
+        {
+
+        }
+        @Override
+        public String toString() {
+            return date;
         }
     }
 }

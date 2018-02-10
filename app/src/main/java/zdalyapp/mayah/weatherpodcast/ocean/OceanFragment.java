@@ -188,8 +188,9 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
                     int id  = Integer.valueOf(subId);
                     try {
                         JSONObject jsonObject = dataArray.getJSONObject(id);
+                        Utils.SetStringFromPreference("city_detail",jsonObject.toString(), getActivity());
                         Intent intent = new Intent(getActivity(), DetailWeatherActivity.class);
-                        intent.putExtra("data", jsonObject.toString());
+                       // intent.putExtra("data", jsonObject.toString());
                         startActivity(intent);
                     } catch (JSONException e) {
                         e.printStackTrace();

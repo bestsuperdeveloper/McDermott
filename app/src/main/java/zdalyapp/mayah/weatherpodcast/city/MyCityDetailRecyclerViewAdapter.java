@@ -1,5 +1,6 @@
 package zdalyapp.mayah.weatherpodcast.city;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +29,9 @@ import zdalyapp.mayah.weatherpodcast.city.dummy.DummyContent.CityItem;
 public class MyCityDetailRecyclerViewAdapter extends RecyclerView.Adapter<MyCityDetailRecyclerViewAdapter.ViewHolder> {
 
     private final JSONArray mValues;
-    private final OnCityListFragmentInteractionListener mListener;
+    private final Context mListener;
 
-    public MyCityDetailRecyclerViewAdapter(JSONArray jsonArray, OnCityListFragmentInteractionListener listener) {
+    public MyCityDetailRecyclerViewAdapter(JSONArray jsonArray, Context listener) {
         mValues = jsonArray;
         mListener = listener;
     }
@@ -44,29 +45,22 @@ public class MyCityDetailRecyclerViewAdapter extends RecyclerView.Adapter<MyCity
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+
         try {
+            JSONObject weatherWeekObj = mValues.getJSONObject(position);
+            holder.mDate.setText(weatherWeekObj.getString("date"));
+            holder.mTempHighLow.setText("High: " + weatherWeekObj.getString("maxtempC") + "°C   Low: " +  weatherWeekObj.getString("mintempC"));
+            JSONArray hourlyArr = weatherWeekObj.getJSONArray("hourly");
+            JSONObject hourlyObj = hourlyArr.getJSONObject(0);
+            JSONArray weatherIconArr = hourlyObj.getJSONArray("weatherIconUrl");
+            JSONObject weatherIconObj = weatherIconArr.getJSONObject(0);
+            String url = weatherIconObj.getString("value");
+            JSONArray weatherDescArr = hourlyObj.getJSONArray("weatherDesc");
+            JSONObject weatherDescObj = weatherDescArr.getJSONObject(0);
+            String desc = weatherDescObj.getString("value");
 
-            final JSONObject object = mValues.getJSONObject(position);
-            holder.mItem = new CityItem(object);
-            Picasso.with(holder.mView.getContext()).load(holder.mItem.imgURL).error(R.drawable.check_small).into(holder.mIcon);
-            //  Glide.with(holder.mView.getContext()).load(holder.mItem.imgURL).into(holder.mIcon);
-            holder.mTitle.setText(holder.mItem.title);
-            holder.mTempC.setText(String.format("Tempc:   %s°C", holder.mItem.tempc));
-            holder.mTempF.setText(String.format("Tempf:   %s°F", holder.mItem.tempf));
-            holder.mWindSpeed.setText(String.format("Wind Speed:   %sKm/h", holder.mItem.windspeed));
-            holder.mHumidity.setText(String.format("Humidity:   %s", holder.mItem.humidity) + "%");
-            holder.mDesc.setText(String.format("%s", holder.mItem.desc));
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != mListener) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-
-                        mListener.onCityListFragmentInteraction(holder.mItem);
-                    }
-                }
-            });
+            holder.mDesc.setText(desc);
+            Picasso.with(holder.mView.getContext()).load(url).into(holder.mIcon);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -83,30 +77,24 @@ public class MyCityDetailRecyclerViewAdapter extends RecyclerView.Adapter<MyCity
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public  View mView;
-        public  TextView mTitle;
-        public  TextView mTempC;
-        public  TextView mTempF;
-        public  TextView mWindSpeed;
-        public  TextView mHumidity;
+        public  TextView mDate;
         public  TextView mDesc;
+        public  TextView mTempHighLow;
         public ImageView mIcon;
-        public CityItem mItem;
 
         public ViewHolder(View view) {
             super(view);
-            mView =  view.findViewById(R.id.mainLayout);
-            mTitle = (TextView) view.findViewById(R.id.textView9);
-            mTempC = (TextView) view.findViewById(R.id.textView10);
-            mTempF = (TextView) view.findViewById(R.id.textView11);
-            mWindSpeed = (TextView) view.findViewById(R.id.textView12);
-            mHumidity = (TextView) view.findViewById(R.id.textView13);
-            mDesc = (TextView) view.findViewById(R.id.textView14);
-            mIcon = (ImageView) view.findViewById(R.id.imageView6);
+            mView = view;
+            mDate = (TextView) view.findViewById(R.id.textView28);
+            mDesc = (TextView) view.findViewById(R.id.textView29);
+            mTempHighLow = (TextView) view.findViewById(R.id.textView30);
+
+            mIcon = (ImageView) view.findViewById(R.id.imageView10);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mTempF.getText() + "'";
+            return super.toString() + " '" + mDate.getText() + "'";
         }
     }
 }
