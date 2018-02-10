@@ -57,7 +57,7 @@ public class MyProductionRecyclerViewAdapter extends RecyclerView.Adapter<MyProd
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("values");
             params.width = jsonArray.length() *  Utils.pxToDp(200);
-            Log.d("graphWidth", params.width + " " + jsonArray.length() + " " + position);
+//            Log.d("graphWidth", params.width + " " + jsonArray.length() + " " + position);
         //    holder.mGraphView.setLayoutParams(params);
             holder.mGraphView.setExampleString(jsonObject.toString());
         } catch (JSONException e) {

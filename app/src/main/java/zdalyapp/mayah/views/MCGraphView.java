@@ -43,19 +43,16 @@ public class MCGraphView extends View {
     private JSONObject graphJson;
     public MCGraphView(Context context) {
         super(context);
-        Log.d("init", "init1");
         init(null, 0);
     }
 
     public MCGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Log.d("init", "init2");
         init(attrs, 0);
     }
 
     public MCGraphView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        Log.d("init", "init3");
         init(attrs, defStyle);
     }
 
@@ -295,7 +292,8 @@ public class MCGraphView extends View {
                 }
             }
             if (maxBarVal != 0)
-                eachValHeight = yAxisHeight / (maxYAxis - minYAxis);float yAxisUnitHeight = yAxisHeight / (yAxisStrArr.size() - 1);
+                eachValHeight = yAxisHeight / (maxYAxis - minYAxis);
+            float yAxisUnitHeight = yAxisHeight / (yAxisStrArr.size() - 1);
 
 
              // Draw Y-Axis line and label
@@ -317,35 +315,22 @@ public class MCGraphView extends View {
 
             canvas.drawLine(paddingLeft, paddingBottom, paddingLeft, paddingBottom + contentHeight,  yAxisLinePaint);
 
-             Paint paint = new Paint();
-             paint.setStyle(Paint.Style.FILL);
 
-             paint.setColor(Color.GRAY);
-             paint.setStrokeWidth(2);
-             paint.setTextSize(30);
-             paint.setTextAlign(Paint.Align.RIGHT);
-
-             for (int i = 0; i < yAxisStrArr.size(); i++)
-            {
-                canvas.drawLine(paddingLeft - 30, paddingBottom + i * yAxisUnitHeight, paddingLeft, paddingBottom + i * yAxisUnitHeight, yAxisLinePaint);
-                canvas.drawLine(paddingLeft + 6 , paddingBottom + i * yAxisUnitHeight, paddingLeft + contentWidth, paddingBottom + i * yAxisUnitHeight, yGridLinePaint);
-                canvas.drawText(yAxisStrArr.get(yAxisStrArr.size() - 1 - i), paddingLeft - 50, paddingBottom + i * yAxisUnitHeight + 12, paint);
-            }
 
              Paint xAxisLinePaint = new Paint();
              xAxisLinePaint.setColor(Color.BLACK);
              xAxisLinePaint.setAntiAlias(true);
-             xAxisLinePaint.setStrokeWidth(7);
+             xAxisLinePaint.setStrokeWidth(8);
              xAxisLinePaint.setStyle(Paint.Style.STROKE);
              xAxisLinePaint.setStrokeJoin(Paint.Join.ROUND);
              xAxisLinePaint.setStrokeCap(Paint.Cap.SQUARE);
-             canvas.drawLine(paddingLeft , paddingBottom + contentHeight - 2, paddingLeft + contentWidth, paddingBottom + contentHeight - 2 , xAxisLinePaint);
+
 
 
              // Draw Bar and Line Height
 
              int columnIndex = 0;
-             int deltaYPadding = 5;
+             int deltaYPadding = 3;
              for (int i = 0; i < configlength; i++)
              {
                  JSONObject configObj = configArray.getJSONObject(i);
@@ -386,7 +371,7 @@ public class MCGraphView extends View {
                             sumValue[j] = sumVal;
 
                              Paint paintRect = new Paint();
-                             paint.setStyle(Paint.Style.FILL);
+                             paintRect.setStyle(Paint.Style.FILL);
                              paintRect.setStrokeJoin(Paint.Join.ROUND);
                              paintRect.setStrokeCap(Paint.Cap.SQUARE);
                              paintRect.setColor(fillColor);
@@ -455,11 +440,30 @@ public class MCGraphView extends View {
                  JSONObject valueObj = values.getJSONObject(i);
                  String dateString = valueObj.getString("ValueDateString");
                  float middlePosInBars = startOffset + (barGroupSpace + barGroupWidth) * i + (barGroupWidth - barSpace) / 2;
-                 canvas.drawLine((int) middlePosInBars, paddingBottom + contentHeight - 2, (int)middlePosInBars, paddingBottom + contentHeight + 10, xAxisLinePaint);
+                 canvas.drawLine((int) middlePosInBars, paddingBottom + contentHeight + 4, (int)middlePosInBars, paddingBottom + contentHeight + 10, xAxisLinePaint);
              }
+             xAxisLinePaint.setColor(Color.BLACK);
+             xAxisLinePaint.setAntiAlias(true);
+             xAxisLinePaint.setStrokeWidth(8);
+             xAxisLinePaint.setStyle(Paint.Style.FILL);
+             xAxisLinePaint.setStrokeJoin(Paint.Join.ROUND);
+             xAxisLinePaint.setStrokeCap(Paint.Cap.SQUARE);
+             canvas.drawLine(paddingLeft , paddingBottom + contentHeight , paddingLeft + contentWidth, paddingBottom + contentHeight   , xAxisLinePaint);
+             Paint paint = new Paint();
+             paint.setStyle(Paint.Style.FILL);
 
+             paint.setColor(Color.GRAY);
+             paint.setStrokeWidth(2);
+             paint.setTextSize(30);
+             paint.setTextAlign(Paint.Align.RIGHT);
 
-
+             for (int i = 0; i < yAxisStrArr.size(); i++)
+             {
+                 canvas.drawLine(paddingLeft - 30, paddingBottom + i * yAxisUnitHeight, paddingLeft, paddingBottom + i * yAxisUnitHeight, yAxisLinePaint);
+                 if (i < yAxisStrArr.size() - 1)
+                    canvas.drawLine(paddingLeft + 6 , paddingBottom + i * yAxisUnitHeight, paddingLeft + contentWidth, paddingBottom + i * yAxisUnitHeight, yGridLinePaint);
+                 canvas.drawText(yAxisStrArr.get(yAxisStrArr.size() - 1 - i), paddingLeft - 50, paddingBottom + i * yAxisUnitHeight + 12, paint);
+             }
              // Draw Dot
              Paint circlePaint = new Paint();
              circlePaint.setStyle(Paint.Style.FILL);

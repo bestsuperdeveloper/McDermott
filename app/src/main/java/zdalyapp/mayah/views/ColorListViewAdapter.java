@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Random;
 
+import zdalyapp.mayah.McDomatsApp;
 import zdalyapp.mayah.R;
 import zdalyapp.mayah.global.Constants;
 
@@ -39,7 +40,15 @@ public class ColorListViewAdapter extends BaseAdapter implements ListAdapter {
             e.printStackTrace();
         }
     }
-
+    public ColorListViewAdapter(Context context) {
+        mContext = context;
+        try {
+            jsonArray = McDomatsApp.getInstance().getDataJsonObj().getJSONArray("configuration");
+            mNbElements = jsonArray.length();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public int getCount() {
         if (mNbElements % 2 == 1)

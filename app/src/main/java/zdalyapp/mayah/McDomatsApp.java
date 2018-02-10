@@ -8,6 +8,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONObject;
+
 import zdalyapp.mayah.global.LruBitmapCache;
 
 /**
@@ -27,7 +29,22 @@ public class McDomatsApp extends Application {
         super.onCreate();
         mInstance = this;
     }
+    public String MainAct;
+    public JSONObject dataJsonObj;
+    public String getMainAct() {
+        return MainAct;
+    }
 
+    public void setMainAct(String mainAct) {
+        MainAct = mainAct;
+    }
+    public JSONObject getDataJsonObj() {
+        return dataJsonObj;
+    }
+
+    public void setDataJsonObj(JSONObject mainAct) {
+        dataJsonObj = mainAct;
+    }
     public static synchronized McDomatsApp getInstance() {
         return mInstance;
     }

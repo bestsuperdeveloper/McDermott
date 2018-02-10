@@ -1,5 +1,6 @@
 package zdalyapp.mayah.dashboard;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -13,18 +14,25 @@ import android.widget.Button;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import zdalyapp.mayah.McDomatsApp;
 import zdalyapp.mayah.R;
 import zdalyapp.mayah.dailynews.DailyNewsFragment;
 import zdalyapp.mayah.dailynews.dummy.DummyContent;
 import zdalyapp.mayah.global.Constants;
+import zdalyapp.mayah.global.Utils;
 import zdalyapp.mayah.global.WebViewFragment;
 import zdalyapp.mayah.keytrends.DetailGraphActivity;
 import zdalyapp.mayah.keytrends.industry.IndustryFragment;
 import zdalyapp.mayah.keytrends.KeyTrendsFragment;
 import zdalyapp.mayah.keytrends.production.ProductionFragment;
+import zdalyapp.mayah.spotprices.SpotPriceFragment;
 
 public class DashboardActivity extends AppCompatActivity implements DailyNewsFragment.OnListDailyNewsInteractionListener, WebViewFragment.OnWebFragmentInteractionListener
     , KeyTrendsFragment.OnTrendsInteractionListener,   IndustryFragment.OnIndustryListFragmentInteractionListener, ProductionFragment.OnProductionListFragmentInteractionListener
+    , SpotPriceFragment.OnSpotListFragmentInteractionListener
 {
 
     Button button1, button2, button3, button4;
@@ -106,18 +114,38 @@ public class DashboardActivity extends AppCompatActivity implements DailyNewsFra
         {
             case 0:
             {
-                fr = DailyNewsFragment.newInstance(1);
-                transaction.replace(R.id.mainFrame, fr);
-                transaction.commit();
+
+                fr = (DailyNewsFragment) fm.findFragmentByTag("news");
+                if (fr == null)
+                {
+                    fr = DailyNewsFragment.newInstance(1);
+                    transaction.replace(R.id.mainFrame, fr, "news").commit();
+                }
                 break;
             }
             case 1:
             {
-                fr = KeyTrendsFragment.newInstance("", "");
-                transaction.replace(R.id.mainFrame, fr);
-                transaction.commit();
+                fr = (KeyTrendsFragment) fm.findFragmentByTag("trend");
+                if (fr == null)
+                {
+                    fr = KeyTrendsFragment.newInstance("", "");
+                    transaction.replace(R.id.mainFrame, fr, "trend").commit();
+                }
+                break;
+            }
+            case 2:
+            {
+                fr = (SpotPriceFragment) fm.findFragmentByTag("spot");
+                if (fr == null)
+                {
+                    fr = SpotPriceFragment.newInstance(1);
+                    transaction.replace(R.id.mainFrame, fr, "spot").commit();
+                }
+
+                break;
             }
         }
+
     }
 
     @Override
@@ -153,14 +181,48 @@ public class DashboardActivity extends AppCompatActivity implements DailyNewsFra
     public void onIndustryListFragmentInteraction(zdalyapp.mayah.keytrends.industry.dummy.DummyContent.IndustryItem item) {
 
     }
+    private String stringField;
+    private int intField;
+    private List<Object> arrayField;
+    private enum DataHolder {
+        INSTANCE;
 
+        private List<Object> mObjectList;
+
+        public static boolean hasData() {
+            return INSTANCE.mObjectList != null;
+        }
+
+        public static void setData(final List<Object> objectList) {
+            INSTANCE.mObjectList = objectList;
+        }
+
+        public static List<Object> getData() {
+            final List<Object> retList = INSTANCE.mObjectList;
+            INSTANCE.mObjectList = null;
+            return retList;
+        }
+    }
+    private final static String ARG_STRING = "ARG_STRING";
+    private final static String ARG_INT = "ARG_INT";
     @Override
     public void onProductionListFragmentInteraction(JSONObject item) {
 
-        Intent intent = new Intent(this, DetailGraphActivity.class);
-        Constants.dataString = item.toString();
 
+        Intent intent = new Intent(this, DetailGraphActivity.class);
+
+        McDomatsApp.getInstance().MainAct = item.toString();
+        Log.d("itemSize", item.toString().length() + "");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
+
+        //DetailGraphActivity.startActivity( DashboardActivity.this, item.toString(),
+//        0, new ArrayList<>());
+
+    }
+
+    @Override
+    public void onSpotListFragmentInteraction(zdalyapp.mayah.spotprices.dummy.DummyContent.SpotPriceItem item) {
 
     }
 }

@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -174,6 +175,7 @@ public class KeyTrendsFragment extends Fragment{
                 {
                     dataByType.get(type).put(jsonObject);
                 }
+
             } catch (JSONException e) {
 
             }
@@ -182,6 +184,8 @@ public class KeyTrendsFragment extends Fragment{
             Utils.makeGraphColor(maxColorCount - Constants.GraphColorList.size());
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         int size = headerTitleList.size();
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction fr = fm.beginTransaction();
         for (int i = 0; i < size; i++)
         {
             String type = headerTitleList.get(i);
@@ -203,7 +207,7 @@ public class KeyTrendsFragment extends Fragment{
             loginDialog.setContentView(R.layout.activity_login_view);
             ImageView imageView = loginDialog.findViewById(R.id.imageView);
             TextView textView = loginDialog.findViewById(R.id.textView);
-            textView.setText("Getting Trends...");
+            textView.setText("Getting trends...");
         }
         loginDialog.show();
     }
