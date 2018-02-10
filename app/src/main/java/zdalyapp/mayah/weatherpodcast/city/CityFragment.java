@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import zdalyapp.mayah.R;
+import zdalyapp.mayah.global.Utils;
 import zdalyapp.mayah.weatherpodcast.city.dummy.DummyContent;
 import zdalyapp.mayah.weatherpodcast.city.dummy.DummyContent.CityItem;
 
@@ -64,7 +65,8 @@ public class CityFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             try {
-                dataArray = new JSONArray(getArguments().getString(ARG_JSON_DATA));
+                String dataStr = Utils.GetStringFromPreference("city", getActivity());
+                dataArray = new JSONArray(dataStr);
                 int lenth = dataArray.length();
                 for (int i = 0; i < lenth; i++)
                 {

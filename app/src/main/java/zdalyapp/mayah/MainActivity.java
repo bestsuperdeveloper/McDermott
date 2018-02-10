@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private void ShowView() {
         imgMainLogo = (ImageView) findViewById(R.id.imageView2);
         imgBotLogo = (ImageView) findViewById(R.id.imageView3);
-        imgMainLogo.setImageBitmap(Utils.GetImageFromAssets(this, "logo_medium.png"));
-        imgBotLogo.setImageBitmap(Utils.GetImageFromAssets(this, "zdaly_logo.png"));
+        imgMainLogo.setImageBitmap(Utils.GetImageFromAssets(this, "logo_small.png"));
+       // imgBotLogo.setImageBitmap(Utils.GetImageFromAssets(this, "zdaly_logo.png"));
     }
 
     private void ShowLoginScreen() {

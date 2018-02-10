@@ -101,7 +101,7 @@ public class MyDailyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyDaily
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
+            mView = view.findViewById(R.id.mainLayout);
             mIdView = (TextView) view.findViewById(R.id.textView1);
             mContentView = (TextView) view.findViewById(R.id.textView2);
             mDetailView = (TextView) view.findViewById(R.id.textView3);

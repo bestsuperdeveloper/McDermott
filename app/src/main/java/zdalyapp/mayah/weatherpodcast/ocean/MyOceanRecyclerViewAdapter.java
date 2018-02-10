@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import zdalyapp.mayah.R;
@@ -18,11 +22,11 @@ import zdalyapp.mayah.weatherpodcast.ocean.dummy.DummyContent;
 
 public class MyOceanRecyclerViewAdapter extends RecyclerView.Adapter<MyOceanRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyContent.OceanItem> mValues;
+    private final JSONArray mValues;
     private final OceanFragment.OnOceanFragmentInteractionListener mListener;
 
-    public MyOceanRecyclerViewAdapter(List<DummyContent.OceanItem> items, OceanFragment.OnOceanFragmentInteractionListener listener) {
-        mValues = items;
+    public MyOceanRecyclerViewAdapter(JSONArray jsonArray, OceanFragment.OnOceanFragmentInteractionListener listener) {
+        mValues = jsonArray;
         mListener = listener;
     }
 
@@ -35,26 +39,33 @@ public class MyOceanRecyclerViewAdapter extends RecyclerView.Adapter<MyOceanRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-
-        holder.mTitle.setText(holder.mItem.title);
-        holder.mLatitude.setText(holder.mItem.latitude);
-        holder.mLongitude.setText(holder.mItem.longitude);
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onOceanFragmentInteraction(holder.mItem);
+        try {
+            holder.mItem = mValues.getJSONObject(position);
+            DummyContent.OceanItem oceanItem = new DummyContent.OceanItem(holder.mItem);
+            holder.mTitle.setText(oceanItem.title);
+            holder.mLatitude.setText("Latitude:  " + oceanItem.latitude);
+            holder.mLongitude.setText("Longitude:  " + oceanItem.longitude);
+            final DummyContent.OceanDetailItem detailItem = new DummyContent.OceanDetailItem(holder.mItem);
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onOceanFragmentInteraction(detailItem);
+                    }
                 }
-            }
-        });
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues.length();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -63,7 +74,7 @@ public class MyOceanRecyclerViewAdapter extends RecyclerView.Adapter<MyOceanRecy
         public  TextView mLatitude;
         public  TextView mLongitude;
 
-        public DummyContent.OceanItem mItem;
+        public JSONObject mItem;
 
         public ViewHolder(View view) {
             super(view);

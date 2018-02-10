@@ -174,8 +174,10 @@ public class WeatherForecastFragment extends Fragment {
 
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction fr = fm.beginTransaction();
-        adapter.addFragment(CityFragment.newInstance(1, weatherArr.toString()), "city");
-        adapter.addFragment(OceanFragment.newInstance(marineArr.toString(), ""), "ocean");
+        Utils.SetStringFromPreference("city", weatherArr.toString(), getActivity());
+        Utils.SetStringFromPreference("ocean", marineArr.toString(), getActivity());
+        adapter.addFragment(CityFragment.newInstance(1, "city"), "city");
+        adapter.addFragment(OceanFragment.newInstance("ocean", ""), "ocean");
         viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager, true);

@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import zdalyapp.mayah.global.Utils;
 import zdalyapp.mayah.weatherpodcast.city.DetailWeatherActivity;
 import zdalyapp.mayah.R;
 import zdalyapp.mayah.weatherpodcast.ocean.dummy.DummyContent;
@@ -84,7 +85,8 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
             mParam2 = getArguments().getString(ARG_PARAM2);
             dataArray = new JSONArray();
             try {
-                dataArray = new JSONArray(mParam1);
+                String dataStr = Utils.GetStringFromPreference("ocean", getActivity());
+                dataArray = new JSONArray(dataStr);
             } catch (JSONException e) {
 
             }
@@ -112,21 +114,26 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
             @Override
             public void onClick(View view) {
                 bMatchState = !bMatchState;
-                if (bMatchState == true)
-                {
-                    mapView.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    mapView.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }
+                triggerView();
 
             }
         });
         bMatchState = false;
+        triggerView();
         return mainView;
+    }
+    void triggerView()
+    {
+        if (bMatchState == true)
+        {
+            mapView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mapView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
     }
     @Override
     public void onResume() {
@@ -206,18 +213,15 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
 
     private void AddAnnotation() {
         int length = dataArray.length();
-        dataList = new ArrayList<>();
         for (int i = 0; i < length; i++)
         {
             try {
-
                 JSONObject dataObj = dataArray.getJSONObject(i);
                 double lat = Double.parseDouble(dataObj.getString("lat").replaceAll("[^0-9\\\\.]+",""));
                 double lon = Double.parseDouble(dataObj.getString("lon").replaceAll("[^0-9\\\\.]+",""));
                 String title = dataObj.getString("name");
                 LatLng pos = new LatLng(lat, lon);
                 Marker marker  = mMap.addMarker(new MarkerOptions().position(pos).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.red_pin_small)));
-                dataList.add(new DummyContent.OceanItem(dataObj));
                 Log.d("position", lat + " " + lon);
                 String subTitle = String.format("%d", i);
                 marker.setTag(subTitle);
@@ -225,14 +229,13 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
                 e.printStackTrace();
             }
         }
-        recyclerView.setAdapter(new MyOceanRecyclerViewAdapter(dataList, mListener));
+        recyclerView.setAdapter(new MyOceanRecyclerViewAdapter(dataArray, mListener));
 
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         ShowMap();
     }
 
@@ -248,6 +251,6 @@ public class OceanFragment extends Fragment implements OnMapReadyCallback{
      */
     public interface OnOceanFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onOceanFragmentInteraction(DummyContent.OceanItem oceanItem);
+        void onOceanFragmentInteraction(DummyContent.OceanDetailItem oceanItem);
     }
 }

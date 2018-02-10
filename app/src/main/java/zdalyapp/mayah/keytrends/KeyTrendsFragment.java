@@ -189,7 +189,8 @@ public class KeyTrendsFragment extends Fragment{
         for (int i = 0; i < size; i++)
         {
             String type = headerTitleList.get(i);
-            adapter.addFragment(ProductionFragment.newInstance(1, dataByType.get(type).toString()), type);
+            Utils.SetStringFromPreference(type, dataByType.get(type).toString(), getActivity());
+            adapter.addFragment(ProductionFragment.newInstance(1, type), type);
         }
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);

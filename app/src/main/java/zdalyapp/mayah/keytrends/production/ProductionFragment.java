@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import zdalyapp.mayah.R;
+import zdalyapp.mayah.global.Utils;
 import zdalyapp.mayah.keytrends.production.dummy.DummyContent;
 import zdalyapp.mayah.keytrends.production.dummy.DummyContent.ProductItem;
 
@@ -57,7 +59,9 @@ public class ProductionFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             try {
-                dataArray = new JSONArray(getArguments().getString(ARG_JSON_ARRAY));
+                String dataString = Utils.GetStringFromPreference(getArguments().getString(ARG_JSON_ARRAY), getActivity());
+                dataArray = new JSONArray(dataString);
+                Log.d("dataArrya", getArguments().getString(ARG_JSON_ARRAY).length() + "");
             } catch (JSONException e) {
                 e.printStackTrace();
                 dataArray = new JSONArray();
